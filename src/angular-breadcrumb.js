@@ -54,6 +54,7 @@ function $Breadcrumb() {
             var conf,
                 parentParams,
                 ref = parseStateRef(stateRef),
+                state = ref.state,
                 force = false,
                 skip = false;
 
@@ -66,7 +67,12 @@ function $Breadcrumb() {
             conf = $state.get(ref.state);
             // Get breadcrumb options
             if(conf.ncyBreadcrumb) {
-                if(conf.ncyBreadcrumb.force){ force = true; }
+                if(conf.ncyBreadcrumb.force) {
+                    force = true;
+                    if(angular.isString(conf.ncyBreadcrumb.force)) {
+                        state = conf.ncyBreadcrumb.force;
+                    }
+				}
                 if(conf.ncyBreadcrumb.skip){ skip = true; }
             }
             if((!conf.abstract || $$options.includeAbstract || force) && !skip) {
@@ -74,7 +80,7 @@ function $Breadcrumb() {
                     parentParams = $lastViewScope.$eval(ref.paramExpr);
                 }
 
-                conf.ncyBreadcrumbLink = $state.href(ref.state, parentParams || $stateParams || {});
+                conf.ncyBreadcrumbLink = $state.href(state, parentParams || $stateParams || {});
                 chain.unshift(conf);
             }
         };
